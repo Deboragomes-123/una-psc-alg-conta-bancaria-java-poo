@@ -1,0 +1,50 @@
+// ContaCorrente.java
+public class ContaCorrente implements ContaBancaria {
+    private String nomePessoa;
+    private String numeroConta;
+    private double saldo;
+
+    public ContaCorrente(String nomePessoa, String numeroConta, double saldoInicial) {
+        this.nomePessoa = nomePessoa;
+        this.numeroConta = numeroConta;
+        this.saldo = saldoInicial;
+    }
+
+    // Métodos para obter informações da conta
+    public String getNomePessoa() {
+        return nomePessoa;
+    }
+
+    public String getNumeroConta() {
+        return numeroConta;
+    }
+
+    @Override
+    public void depositar(double valor) {
+        if (valor > 0) {
+            this.saldo += valor;
+            System.out.printf("Depósito de R$ %.2f realizado com sucesso.%n", valor);
+        } else {
+            System.out.println("Valor de depósito inválido.");
+        }
+    }
+
+    @Override
+    public void sacar(double valor) {
+        if (valor <= 0) {
+            System.out.println("Valor de saque inválido.");
+        } else if (valor > 5000.00) {
+            System.out.println("Valor do saque acima do permitido.");
+        } else if (this.saldo < valor) {
+            System.out.println("Saldo insuficiente para realizar a operação.");
+        } else {
+            this.saldo -= valor;
+            System.out.printf("Saque de R$ %.2f realizado com sucesso.%n", valor);
+        }
+    }
+
+    @Override
+    public double getSaldo() {
+        return this.saldo;
+    }
+}

@@ -1,0 +1,81 @@
+import java.util.InputMismatchException;
+import java.util.Scanner;
+
+public class AppContaBancaria {
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Digite o nome da pessoa: ");
+        String nome = scanner.nextLine();
+
+        System.out.print("Digite o número da conta: ");
+        String conta = scanner.nextLine();
+
+        double saldoInicial = 0;
+        boolean entradaValida = false;
+        while (!entradaValida) {
+            try {
+                System.out.print("Digite o saldo inicial: ");
+                saldoInicial = scanner.nextDouble();
+                if (saldoInicial < 0) {
+                    System.out.println("Saldo inicial não pode ser negativo. Digite novamente.");
+                } else {
+                    entradaValida = true;
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada inválida. Por favor, digite um número para o saldo.");
+                scanner.next(); // Limpa o buffer do scanner
+            }
+        }
+
+        // Cria a conta usando a classe concreta ContaCorrente
+        ContaCorrente minhaConta = new ContaCorrente(nome, conta, saldoInicial);
+        System.out.println("Conta bancária criada com sucesso.");
+        System.out.println("Titular: " + minhaConta.getNomePessoa());
+        System.out.println("Número da Conta: " + minhaConta.getNumeroConta());
+        System.out.printf("Saldo Inicial: R$ %.2f%n", minhaConta.getSaldo());
+
+        int opcao = -1;
+        while (opcao != 0) {
+            System.out.println("\n--- Menu de Operações ---");
+            System.out.println("1. Depositar");
+            System.out.println("2. Sacar");
+            System.out.println("3. Obter Saldo");
+            System.out.println("0. Sair");
+            System.out.print("Escolha uma opção: ");
+
+            try {
+                opcao = scanner.nextInt();
+                double valor;
+
+                switch (opcao) {
+                    case 1:
+                        System.out.print("Digite o valor para depósito: ");
+                        valor = scanner.nextDouble();
+                        minhaConta.depositar(valor);
+                        break;
+                    case 2:
+                        System.out.print("Digite o valor para saque: ");
+                        valor = scanner.nextDouble();
+                        minhaConta.sacar(valor);
+                        break;
+                    case 3:
+                        System.out.printf("Saldo disponível: R$ %.2f%n", minhaConta.getSaldo());
+                        break;
+                    case 0:
+                        System.out.println("Saindo do programa. Obrigado!");
+                        break;
+                    default:
+                        System.out.println("Opção inválida. Tente novamente.");
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("Entrada inválida. Por favor, digite um número para a opção.");
+                scanner.next(); // Limpa o buffer do scanner
+                opcao = -1; // Mantém o loop
+            }
+        }
+
+        scanner.close();
+    }
+}
